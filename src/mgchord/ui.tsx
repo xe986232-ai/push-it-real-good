@@ -1,4 +1,5 @@
 import React from "react";
+import { Easing } from "remotion";
 import { C, FONT, clamp, rise, sp, beatPulse } from "./util";
 import { CLICKS, G, KEY_PRESSES, PROG, ROLL, SOUNDS, STYLE_NAMES, patternFor } from "./data";
 
@@ -32,10 +33,16 @@ export interface WinProps {
 }
 
 /* ---------- Header ---------- */
-const Header: React.FC = () => (
+const Header: React.FC<{ frame: number }> = ({ frame }) => (
   <div style={abs(0, 0, G.winW, G.headH, { background: "#f4f6fb", display: "flex", alignItems: "center", padding: "0 16px", boxSizing: "border-box", gap: 14 })}>
     <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 32, fontWeight: 900, color: C.blue3, letterSpacing: ".01em" }}>
-      <Lamp />MGCHORD
+      <span style={{ display: "inline-block", transform: `scale(${sp(frame, 106, 10, 200)}) rotate(${(1 - sp(frame, 106, 10, 200)) * -50}deg)` }}><Lamp /></span>
+      <span style={{ display: "flex" }}>
+        {"MGCHORD".split("").map((ch, i) => {
+          const k = sp(frame, 110 + i * 2.5, 12, 190);
+          return <span key={i} style={{ display: "inline-block", opacity: clamp(k * 1.4, 0, 1), filter: `blur(${(1 - clamp(k, 0, 1)) * 9}px)`, transform: `perspective(300px) translateY(${(1 - k) * -20}px) rotateX(${(1 - k) * 90}deg)` }}>{ch}</span>;
+        })}
+      </span>
     </div>
     <div style={{ margin: "0 auto", display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
       <div style={{ width: 230, height: 30, background: "#e6eaf4", color: "#8090b0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 3, fontWeight: 700 }}>My Progression</div>
@@ -51,9 +58,9 @@ const Dropdown: React.FC<{ x: number; w: number; label: string; flash: number }>
     background: flash > 0.02 ? `rgb(${74 + 60 * flash}, ${125 + 60 * flash}, ${230 + 25 * flash})` : C.blue2,
     color: "#fff", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center",
     fontSize: 22, fontWeight: 800, letterSpacing: ".02em", textTransform: "uppercase",
-    transform: `scale(${1 + 0.07 * flash})`, boxShadow: flash > 0.05 ? `0 0 ${30 * flash}px rgba(255,255,255,.7)` : "none",
+    transform: `perspective(700px) rotateX(${flash * -16}deg) scale(${1 + 0.07 * flash})`, boxShadow: flash > 0.05 ? `0 0 ${30 * flash}px rgba(255,255,255,.7)` : "none",
   })}>
-    {label}<Chev />
+    <span style={{ display: "inline-block", filter: `blur(${flash * 7}px)`, transform: `translateY(${flash * -9}px)` }}>{label}</span><Chev />
   </div>
 );
 
@@ -128,7 +135,7 @@ const ChordRow: React.FC<WinProps> = ({ frame }) => (
       return (
         <div key={c.name} style={abs(G.rollX + i * 4 * ROLL.PX_BEAT + 2, G.blockY, w, G.blockH, {
           background: glow > 0.05 ? "#fff" : C.blue3, color: glow > 0.05 ? C.blue3 : "#fff", borderRadius: 6, display: "grid", placeItems: "center",
-          fontSize: 28, fontWeight: 900, transform: `scaleY(${k}) scaleX(${0.7 + 0.3 * k})`, transformOrigin: "50% 100%", boxShadow: `0 0 ${24 * glow}px rgba(255,255,255,.9), inset 0 -2px 0 rgba(0,0,0,.12)`,
+          fontSize: 28, fontWeight: 900, filter: `blur(${(1 - clamp(k, 0, 1)) * 7}px)`, transform: `perspective(520px) rotateX(${(1 - k) * 80}deg) scale(${0.85 + 0.15 * k})`, transformOrigin: "50% 100%", boxShadow: `0 0 ${24 * glow}px rgba(255,255,255,.9), inset 0 -2px 0 rgba(0,0,0,.12)`,
         })}>{c.name}</div>
       );
     })}
@@ -150,9 +157,11 @@ const Roll: React.FC<WinProps> = (p) => {
       if (k <= 0.001 || frame < clickAt + 4) return;
       const x = ci * 4 * ROLL.PX_BEAT + n.s * ROLL.PX_BEAT;
       const y = (ROLL.MAX - n.m) * ROLL.ROW_H;
+      const into = p.playhead - (ci * 4 + n.s);
+      const act = p.playhead >= 0 && into >= 0 && into < n.l ? 0.3 + 0.7 * Math.exp(-into * 2.2) : 0;
       notes.push(
         <div key={`${ci}-${ni}`} style={{ position: "absolute", left: x + 2, top: y + 1, width: Math.max(5, n.l * ROLL.PX_BEAT - 4), height: ROLL.ROW_H - 2.5, borderRadius: 3,
-          background: "linear-gradient(180deg,#6f9cf5,#3f6fd8)", opacity: 0.55 + 0.45 * k, transform: `scaleX(${k})`, transformOrigin: "0 50%", boxShadow: "0 2px 6px rgba(63,111,216,.3)" }} />
+          background: act > 0.35 ? "linear-gradient(180deg,#ffd77f,#f2b632)" : "linear-gradient(180deg,#6f9cf5,#3f6fd8)", opacity: 0.55 + 0.45 * k, transform: `translateY(${(1 - k) * -18}px) scaleX(${k}) scaleY(${1 + act * 0.6})`, transformOrigin: "0 50%", boxShadow: act > 0.02 ? `0 0 ${22 * act}px rgba(242,182,50,${0.9 * act})` : "0 2px 6px rgba(63,111,216,.3)" }} />
       );
     });
   });
@@ -170,7 +179,10 @@ const Roll: React.FC<WinProps> = (p) => {
       {[1, 2, 3].map((b) => (
         <div key={b} style={{ position: "absolute", left: b * 4 * ROLL.PX_BEAT - 6, top: 0, width: 12, height: 26, background: C.orange, borderRadius: "0 0 6px 6px", opacity: rise(frame, CLICKS[b] ?? 0, 8) }} />
       ))}
-      {head >= 0 && <div style={{ position: "absolute", left: head, top: 0, width: 3, height: "100%", background: C.blue3, boxShadow: "0 0 12px rgba(63,111,216,.6)" }} />}
+      {head >= 0 && <>
+        <div style={{ position: "absolute", left: head - 130, top: 0, width: 130, height: "100%", background: "linear-gradient(90deg, rgba(63,111,216,0), rgba(63,111,216,.2))" }} />
+        <div style={{ position: "absolute", left: head, top: 0, width: 3, height: "100%", background: C.blue3, boxShadow: "0 0 14px rgba(63,111,216,.8)" }} />
+      </>}
     </div>
   );
 };
@@ -196,14 +208,24 @@ const Bar: React.FC<WinProps> = (p) => {
   );
 };
 
+/* ---------- Kilau cahaya yang menyapu jendela ---------- */
+const SHINES = [104, 300, 545, 745];
+const Shine: React.FC<{ frame: number }> = ({ frame }) => {
+  const hit = SHINES.find((s) => frame >= s && frame <= s + 30);
+  if (hit === undefined) return null;
+  const t = Easing.inOut(Easing.cubic)((frame - hit) / 30);
+  return <div style={{ position: "absolute", top: -120, left: -420 + t * (G.winW + 900), width: 280, height: G.uiH + 240, transform: "skewX(-20deg)", background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0))", zIndex: 9, pointerEvents: "none" }} />;
+};
+
 export const Window: React.FC<WinProps> = (p) => (
-  <div style={abs(0, 0, G.winW, G.uiH, { background: C.blue, borderRadius: 14, overflow: "hidden", fontFamily: FONT, boxShadow: "0 40px 90px -28px rgba(44,85,180,.5), 0 0 0 1px rgba(63,111,216,.1)" })}>
-    <Header />
+  <div style={abs(0, 0, G.winW, G.uiH, { background: C.blue, borderRadius: 14, overflow: "hidden", fontFamily: FONT, boxShadow: `0 40px 90px -28px rgba(44,85,180,${0.5 + (p.playhead >= 0 ? 0.3 * beatPulse(p.frame) : 0)}), 0 0 0 1px rgba(63,111,216,.1)` })}>
+    <Header frame={p.frame} />
     <Wave {...p} />
     <ChordRow {...p} />
     <Roll {...p} />
     <Bar {...p} />
     <Controls {...p} />
+    <Shine frame={p.frame} />
   </div>
 );
 
@@ -233,7 +255,7 @@ export const Keyboard: React.FC<{ frame: number }> = ({ frame }) => {
         const pr = n === "C" && i === 0 ? press("C") : 0;
         return (
           <div key={i} style={abs(KB.x, KB.top + KB.h - (i + 1) * KH + 2, KB.w, KH - 4, {
-            background: pr > 0.05 ? `linear-gradient(90deg,#9db9ff,#e3ecff)` : "linear-gradient(90deg,#e4e4ec,#fbfbfd)", borderRadius: "0 12px 12px 0",
+            background: pr > 0.05 ? `linear-gradient(90deg,#9db9ff,#e3ecff)` : "linear-gradient(90deg,#e4e4ec,#fbfbfd)", borderRadius: "0 12px 12px 0", transform: `translateX(${-16 * pr}px)`,
             boxShadow: `inset -6px 0 0 rgba(0,0,0,.12)${pr > 0.05 ? `, 0 0 ${28 * pr}px rgba(255,255,255,.9)` : ""}`, color: "#7a7a88", fontSize: 18, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 16, boxSizing: "border-box",
           })}>{n}</div>
         );
@@ -242,7 +264,7 @@ export const Keyboard: React.FC<{ frame: number }> = ({ frame }) => {
         const pr = press(b.n);
         return (
           <div key={b.n} style={abs(KB.x, KB.top + KB.h - b.b * KH - KH * 0.31, KB.w * 0.62, KH * 0.62, {
-            zIndex: 2, borderRadius: "0 9px 9px 0", background: pr > 0.05 ? "linear-gradient(90deg,#3b5fc4,#7aa0ff)" : "linear-gradient(90deg,#0e0e13,#2c2c38)",
+            zIndex: 2, borderRadius: "0 9px 9px 0", transform: `translateX(${-16 * pr}px)`, background: pr > 0.05 ? "linear-gradient(90deg,#3b5fc4,#7aa0ff)" : "linear-gradient(90deg,#0e0e13,#2c2c38)",
             boxShadow: `inset -5px 0 0 rgba(255,255,255,.08), 3px 0 8px rgba(0,0,0,.5)${pr > 0.05 ? `, 0 0 ${28 * pr}px rgba(130,170,255,.95)` : ""}`, color: "#9a9ab0", fontSize: 16, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 12, boxSizing: "border-box",
           })}>{b.n}</div>
         );

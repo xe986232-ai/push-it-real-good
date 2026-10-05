@@ -170,7 +170,8 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
                 letterSpacing: 6,
                 whiteSpace: "pre",
                 opacity: s,
-                transform: `translateY(${(1 - s) * 80}px) scale(${0.6 + 0.4 * s})`,
+                filter: `blur(${(1 - Math.min(1, s)) * 16}px)`,
+                transform: `perspective(800px) rotateX(${(1 - s) * -70}deg) translateY(${(1 - s) * 80}px) scale(${0.6 + 0.4 * s})`,
               }}
             >
               {ch}
@@ -194,6 +195,7 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
           letterSpacing: 8,
           textTransform: "uppercase",
           opacity: subOpacity,
+          filter: `blur(${(1 - subOpacity) * 10}px)`,
           transform: `translateY(${subY}px)`,
         }}
       >

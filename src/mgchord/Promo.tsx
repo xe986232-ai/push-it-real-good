@@ -40,7 +40,7 @@ const Logo: React.FC<{ size: number; frame: number; start: number }> = ({ size, 
       const k = sp(frame, start + i * 3, 11, 170);
       return (
         <span key={i} style={{ display: "inline-block", color: C.blue3, letterSpacing: "-0.01em", textShadow: `0 ${size / 20}px ${size / 8}px rgba(63,111,216,.22)`,
-          opacity: clamp(k * 1.4, 0, 1), transform: `translateY(${(1 - k) * size * 0.5}px) rotate(${(1 - k) * (i % 2 ? 9 : -9)}deg) scale(${0.5 + 0.5 * k})` }}>{ch}</span>
+          opacity: clamp(k * 1.4, 0, 1), filter: `blur(${(1 - clamp(k, 0, 1)) * size / 14}px)`, transform: `perspective(${size * 4}px) translateY(${(1 - k) * size * 0.5}px) rotateX(${(1 - k) * -85}deg) rotate(${(1 - k) * (i % 2 ? 9 : -9)}deg) scale(${0.5 + 0.5 * k})` }}>{ch}</span>
       );
     })}
   </div>
@@ -56,11 +56,11 @@ const Intro: React.FC<{ frame: number }> = ({ frame }) => {
       <div style={{ display: "flex", gap: 16, marginBottom: 60 }}>
         {PROG.map((c, i) => {
           const k = rise(frame, 4 + i * 5, 12);
-          return <div key={c.name} style={{ width: 270, height: 74, borderRadius: 12, background: i % 2 ? C.blue2 : C.blue3, color: "#fff", display: "grid", placeItems: "center", fontFamily: FONT, fontSize: 38, fontWeight: 900, opacity: k, transform: `translateY(${(1 - k) * 50}px) scaleX(${0.6 + 0.4 * k})`, boxShadow: "0 14px 28px -10px rgba(63,111,216,.55)" }}>{c.name}</div>;
+          return <div key={c.name} style={{ width: 270, height: 74, borderRadius: 12, background: i % 2 ? C.blue2 : C.blue3, color: "#fff", display: "grid", placeItems: "center", fontFamily: FONT, fontSize: 38, fontWeight: 900, opacity: k, filter: `blur(${(1 - k) * 8}px)`, transform: `perspective(700px) rotateX(${(1 - k) * 75}deg) translateY(${(1 - k) * 50}px) scaleX(${0.6 + 0.4 * k})`, boxShadow: "0 14px 28px -10px rgba(63,111,216,.55)" }}>{c.name}</div>;
         })}
       </div>
       <Logo size={250} frame={frame} start={14} />
-      <div style={{ marginTop: 52, fontFamily: FONT, fontSize: 38, fontWeight: 800, color: C.muted, letterSpacing: `${lsp}em`, opacity: rise(frame, 48, 14) }}>CHORD PROGRESSION GENERATOR</div>
+      <div style={{ marginTop: 52, fontFamily: FONT, fontSize: 38, fontWeight: 800, color: C.muted, letterSpacing: `${lsp}em`, opacity: rise(frame, 48, 14), filter: `blur(${(1 - rise(frame, 48, 20)) * 14}px)` }}>CHORD PROGRESSION GENERATOR</div>
       <AbsoluteFill style={{ background: "#cfdcff", opacity: flash }} />
     </AbsoluteFill>
   );
@@ -95,15 +95,15 @@ const Caption: React.FC<{ frame: number; c: Cap }> = ({ frame, c }) => {
   const words = c.title.split(" ");
   return (
     <AbsoluteFill style={{ justifyContent: c.top ? "flex-start" : "flex-end", alignItems: "center", paddingBottom: 56, paddingTop: c.top ? 36 : 0, opacity: out, transform: `translateY(${(1 - out) * (c.top ? -24 : 24)}px)` }}>
-      <div style={{ fontFamily: FONT, padding: "20px 52px 24px", background: C.glass, backdropFilter: "blur(16px)", border: "1px solid rgba(63,111,216,.14)", borderRadius: 30, textAlign: "center", boxShadow: "0 28px 70px -28px rgba(44,85,180,.4)" }}>
-        <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: ".3em", color: C.blue3, opacity: rise(frame, c.s, 10) }}>{c.kicker}</div>
+      <div style={{ fontFamily: FONT, padding: "20px 52px 24px", background: C.glass, transform: `perspective(1400px) rotateX(${(1 - rise(frame, c.s, 14)) * 24}deg) scale(${0.93 + 0.07 * rise(frame, c.s, 14)})`, backdropFilter: "blur(16px)", border: "1px solid rgba(63,111,216,.14)", borderRadius: 30, textAlign: "center", boxShadow: "0 28px 70px -28px rgba(44,85,180,.4)" }}>
+        <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: `${0.3 + 0.4 * (1 - rise(frame, c.s, 16))}em`, color: C.blue3, opacity: rise(frame, c.s, 10), filter: `blur(${(1 - rise(frame, c.s, 12)) * 8}px)` }}>{c.kicker}</div>
         <div style={{ fontSize: 76, fontWeight: 900, color: C.text, lineHeight: 1.1, margin: "6px 0 4px", whiteSpace: "pre" }}>
           {words.map((w, i) => {
             const k = sp(frame, c.s + 4 + i * 3, 13, 170);
-            return <span key={i} style={{ display: "inline-block", marginRight: i < words.length - 1 ? 22 : 0, opacity: clamp(k * 1.3, 0, 1), transform: `translateY(${(1 - k) * 46}px)`, color: i === words.length - 1 ? C.blue3 : C.text }}>{w}</span>;
+            return <span key={i} style={{ display: "inline-block", marginRight: i < words.length - 1 ? 22 : 0, opacity: clamp(k * 1.3, 0, 1), filter: `blur(${(1 - clamp(k * 1.1, 0, 1)) * 18}px)`, transform: `perspective(600px) rotateX(${(1 - k) * -65}deg) translateY(${(1 - k) * 46}px)`, color: i === words.length - 1 ? C.blue3 : C.text }}>{w}</span>;
           })}
         </div>
-        <div style={{ fontSize: 31, fontWeight: 700, color: C.muted, opacity: rise(frame, c.s + 14, 12) }}>{c.sub}</div>
+        <div style={{ fontSize: 31, fontWeight: 700, color: C.muted, opacity: rise(frame, c.s + 14, 12), filter: `blur(${(1 - rise(frame, c.s + 14, 16)) * 10}px)` }}>{c.sub}</div>
       </div>
     </AbsoluteFill>
   );
@@ -122,7 +122,7 @@ const Outro: React.FC<{ frame: number }> = ({ frame }) => {
         {CARDS.map((c, i) => {
           const k = sp(frame, 876 + i * 8, 12, 150);
           return (
-            <div key={c.big} style={{ width: 360, height: 250, borderRadius: 30, background: `linear-gradient(160deg, ${C.blue} 0%, ${C.blue3} 55%, ${C.deep} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: FONT, color: "#fff", opacity: clamp(k * 1.4, 0, 1), transform: `translateY(${(1 - k) * 80}px) scale(${0.6 + 0.4 * k})`, boxShadow: "0 30px 60px -24px rgba(44,85,180,.55)" }}>
+            <div key={c.big} style={{ width: 360, height: 250, borderRadius: 30, background: `linear-gradient(160deg, ${C.blue} 0%, ${C.blue3} 55%, ${C.deep} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: FONT, color: "#fff", opacity: clamp(k * 1.4, 0, 1), filter: `blur(${(1 - clamp(k, 0, 1)) * 10}px)`, transform: `perspective(1000px) rotateY(${(1 - k) * -85 + Math.sin(frame / 40 + i) * 5}deg) translateY(${(1 - k) * 80 + Math.sin(frame / 28 + i * 1.3) * 8}px) scale(${0.6 + 0.4 * k})`, boxShadow: "0 30px 60px -24px rgba(44,85,180,.55)" }}>
               <div style={{ fontSize: c.big.length > 2 ? 92 : 112, fontWeight: 900, lineHeight: 1 }}>{c.big}</div>
               <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: ".22em", marginTop: 8, color: "#dbe6ff" }}>{c.small}</div>
             </div>
@@ -181,6 +181,26 @@ export const MgchordPromo: React.FC = () => {
   const [sx, sy] = shake(frame, DRAG.drop, 12);
   const tx = 960 - cx * s + sx, ty = 540 - cy * s + sy;
 
+  // tilt kamera 3D per fase + melayang pelan + hentakan saat klik / drop
+  const rxK: KF[] = [[100, 20], [150, 7], [190, 5], [290, 5], [305, 2], [540, 4], [560, 9], [640, 7], [660, 3], [740, 4], [760, 11], [800, 6], [860, 4], [880, 12]];
+  const ryK: KF[] = [[100, -32], [150, -9], [190, -6], [290, -9], [305, 7], [540, 9], [560, -13], [640, -15], [660, 10], [740, 10], [760, -9], [860, -6], [880, -22]];
+  const rzK: KF[] = [[100, -5], [150, 0], [540, 0], [560, 1.5], [640, 1.5], [660, -1], [760, 0], [880, 3]];
+  const kick = CLICKS.reduce((a2, c) => a2 + (frame >= c ? Math.exp(-(frame - c) / 9) * Math.cos((frame - c) * 0.5) : 0), 0);
+  const dropKick = frame >= DRAG.drop ? Math.exp(-(frame - DRAG.drop) / 8) * Math.sin((frame - DRAG.drop) * 0.6) * 4 : 0;
+  const rx = kf(frame, rxK) + Math.cos(frame / 52) * 1.2 + kick * 2.5 + dropKick + (playing ? 0.5 * beatPulse(frame) : 0);
+  const ry = kf(frame, ryK) + Math.sin(frame / 44) * 1.8 - kick * 3;
+  const rz = kf(frame, rzK) + Math.sin(frame / 60) * 0.4 + kick * 0.6;
+  const kbZ = 70 + (playing ? 16 * beatPulse(frame) : 0);
+  const introBlur = (1 - rise(frame, 100, 14)) * 12;
+
+  // gelombang kejut saat drop ke timeline
+  const rings = [0, 0.2].map((d, i) => {
+    const t = clamp((frame - DRAG.drop) / 24 - d, 0, 1);
+    if (t <= 0 || t >= 1) return null;
+    const e = Easing.out(Easing.cubic)(t), r = 24 + 300 * e;
+    return <div key={i} style={{ position: "absolute", left: DROP.x - r, top: DROP.y - r, width: r * 2, height: r * 2, borderRadius: "50%", border: `${7 * (1 - t)}px solid rgba(91,143,243,${0.85 * (1 - t)})`, boxSizing: "border-box" }} />;
+  });
+
   const st = styleAt(frame), so = soundAt(frame);
   const uiOpacity = rise(frame, 100, 10) * fall(frame, 872, 14);
   const dragGlow = rise(frame, DRAG.pick - 8, 8) * fall(frame, DRAG.drop, 6);
@@ -223,13 +243,19 @@ export const MgchordPromo: React.FC = () => {
     <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
       <Background frame={frame} />
 
-      <div style={{ position: "absolute", left: 0, top: 0, width: G.uiW, height: G.uiH, transformOrigin: "0 0", transform: `translate(${tx}px, ${ty}px) scale(${s})`, opacity: uiOpacity, filter: `blur(${(1 - rise(frame, 100, 14)) * 12}px)` }}>
-        <Window frame={frame} styleIdx={st.idx} styleStart={st.start} soundIdx={so.idx} soundStart={so.start} soundMenu={menu} playhead={playhead} waveAmp={waveAmp} handleGlow={dragGlow} dropFlash={0} />
-        <Keyboard frame={frame} />
-        <Timeline frame={frame} dropAt={DRAG.drop} opacity={rise(frame, 735, 12)} />
-        {chips}
-        {ghost}
-      </div>
+      <AbsoluteFill style={{ opacity: uiOpacity, filter: introBlur > 0.01 ? `blur(${introBlur}px)` : "none" }}>
+        <AbsoluteFill style={{ perspective: 2400, perspectiveOrigin: "50% 50%" }}>
+          <AbsoluteFill style={{ transformStyle: "preserve-3d", transform: `rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg)` }}>
+            <div style={{ position: "absolute", left: 0, top: 0, width: G.uiW, height: G.uiH, transformOrigin: "0 0", transformStyle: "preserve-3d", transform: `translate(${tx}px, ${ty}px) scale(${s})` }}>
+              <Window frame={frame} styleIdx={st.idx} styleStart={st.start} soundIdx={so.idx} soundStart={so.start} soundMenu={menu} playhead={playhead} waveAmp={waveAmp} handleGlow={dragGlow} dropFlash={0} />
+              <div style={{ position: "absolute", left: 0, top: 0, transformStyle: "preserve-3d", transform: `translateZ(${kbZ}px)` }}><Keyboard frame={frame} /></div>
+              <div style={{ position: "absolute", left: 0, top: 0, transformStyle: "preserve-3d", transform: "translateZ(-50px)" }}><Timeline frame={frame} dropAt={DRAG.drop} opacity={rise(frame, 735, 12)} /></div>
+              <div style={{ position: "absolute", left: 0, top: 0, transformStyle: "preserve-3d", transform: "translateZ(150px)" }}>{chips}{ghost}</div>
+              <div style={{ position: "absolute", left: 0, top: 0 }}>{rings}</div>
+            </div>
+          </AbsoluteFill>
+        </AbsoluteFill>
+      </AbsoluteFill>
 
       <Intro frame={frame} />
       <Outro frame={frame} />
