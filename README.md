@@ -11,6 +11,7 @@ npm run dev              # web preview (Vite + @remotion/player)
 npm run build            # build web ke dist/ (dipakai Vercel)
 npm run studio           # Remotion Studio (scrubber)
 npm run render:mgchord   # render MP4 promo MGCHORD -> out/mgchord-promo.mp4 (jalanin di lokal)
+npm run render:web       # render MP4 -> public/mgchord-promo.mp4 (file ini yang dipakai tombol Download di web)
 npm run render           # render MP4 intro -> out/intro.mp4
 npm run audio            # bikin ulang SFX + musik (butuh python3, numpy, scipy, ffmpeg)
 ```

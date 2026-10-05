@@ -11,6 +11,7 @@
     "studio": "remotion studio",
     "render": "remotion render src/index.ts MotionIntro out/intro.mp4",
     "render:mgchord": "remotion render src/index.ts MgchordPromo out/mgchord-promo.mp4",
+    "render:web": "remotion render src/index.ts MgchordPromo public/mgchord-promo.mp4 --crf=22",
     "audio": "python3 scripts/make_audio.py"
   },
   "dependencies": {

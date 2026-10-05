@@ -24,6 +24,26 @@ const tab = (on: boolean): React.CSSProperties => ({
   cursor: "pointer",
 });
 
+const dlBtn: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 10,
+  padding: "12px 22px",
+  borderRadius: 999,
+  background: "linear-gradient(90deg, #3f6fd8, #5b8ff3)",
+  color: "#fff",
+  fontWeight: 800,
+  fontSize: 16,
+  textDecoration: "none",
+  boxShadow: "0 14px 30px -12px rgba(63,111,216,.65)",
+};
+
+const DownloadIcon: React.FC = () => (
+  <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="#fff" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14" />
+  </svg>
+);
+
 export const App: React.FC = () => {
   const [which, setWhich] = useState<"mgchord" | "intro">("mgchord");
   const [title, setTitle] = useState("LHU STUDIO");
@@ -71,6 +91,14 @@ export const App: React.FC = () => {
               <label>Subtitle<input style={box} value={subtitle} onChange={(e) => setSubtitle(e.target.value)} /></label>
             </div>
           </>
+        )}
+        {which === "mgchord" && (
+          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap", marginTop: 16 }}>
+            <a href="/mgchord-promo.mp4" download="mgchord-promo.mp4" style={dlBtn}>
+              <DownloadIcon />Download Video (MP4)
+            </a>
+            <span style={{ color: "#6b7a9c" }}>1920x1080 • 60fps • 36 detik • dengan suara</span>
+          </div>
         )}
         {which === "mgchord" && <p style={{ color: "#6b7a9c", marginTop: 12 }}>Tekan play untuk dengar suaranya (browser butuh klik dulu buat nyalain audio).</p>}
       </div>
