@@ -9,22 +9,22 @@ const GLYPHS = ["Cm", "Ab", "Eb", "Bb", "9", "maj7", "Fm", "Gm7", "sus4", "Dm"];
 const Background: React.FC<{ frame: number }> = ({ frame }) => {
   const p = beatPulse(frame);
   return (
-    <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 38%, #14204a 0%, ${C.bg2} 38%, ${C.bg} 78%)` }}>
-      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, rgba(91,143,243,${0.08 + 0.1 * p}) 0%, transparent 55%)` }} />
-      <svg width="100%" height="100%" style={{ position: "absolute", opacity: 0.07 }}>
-        {Array.from({ length: 20 }, (_, i) => <line key={`v${i}`} x1={i * 100} y1={0} x2={i * 100} y2={1080} stroke="#fff" />)}
-        {Array.from({ length: 11 }, (_, i) => <line key={`h${i}`} x1={0} y1={i * 100} x2={1920} y2={i * 100} stroke="#fff" />)}
+    <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 40%, #ffffff 0%, ${C.bg2} 70%, #e8eefc 100%)` }}>
+      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, rgba(91,143,243,${0.05 + 0.07 * p}) 0%, transparent 55%)` }} />
+      <svg width="100%" height="100%" style={{ position: "absolute", opacity: 0.1 }}>
+        {Array.from({ length: 20 }, (_, i) => <line key={`v${i}`} x1={i * 100} y1={0} x2={i * 100} y2={1080} stroke="#9db6ee" />)}
+        {Array.from({ length: 11 }, (_, i) => <line key={`h${i}`} x1={0} y1={i * 100} x2={1920} y2={i * 100} stroke="#9db6ee" />)}
       </svg>
       {GLYPHS.map((g, i) => {
         const x = (i * 211 + 90) % 1800;
         const y = 1180 - ((i * 173 + frame * (0.5 + (i % 3) * 0.25)) % 1300);
-        return <div key={g + i} style={{ position: "absolute", left: x, top: y, fontFamily: FONT, fontSize: 52 + (i % 4) * 14, fontWeight: 900, color: C.blue, opacity: 0.07 + (i % 3) * 0.02 }}>{g}</div>;
+        return <div key={g + i} style={{ position: "absolute", left: x, top: y, fontFamily: FONT, fontSize: 52 + (i % 4) * 14, fontWeight: 900, color: C.blue, opacity: 0.08 + (i % 3) * 0.02 }}>{g}</div>;
       })}
       {Array.from({ length: 9 }, (_, i) => {
         const x = (i * 263 + 140) % 1900;
         const y = 100 + ((i * 197) % 880) + Math.sin(frame / 30 + i) * 26;
         const s = 20 + (i % 4) * 16;
-        return <div key={i} style={{ position: "absolute", left: x, top: y, width: s, height: s, borderRadius: "50%", background: i % 3 === 0 ? C.orange : C.blue, opacity: 0.2, filter: "blur(2px)" }} />;
+        return <div key={i} style={{ position: "absolute", left: x, top: y, width: s, height: s, borderRadius: "50%", background: i % 3 === 0 ? C.orange : C.blue, opacity: 0.16, filter: "blur(2px)" }} />;
       })}
     </AbsoluteFill>
   );
@@ -36,7 +36,7 @@ const Logo: React.FC<{ size: number; frame: number; start: number }> = ({ size, 
     {"MGCHORD".split("").map((ch, i) => {
       const k = sp(frame, start + i * 3, 11, 170);
       return (
-        <span key={i} style={{ display: "inline-block", color: C.blue3, WebkitTextStroke: `${size / 60}px ${C.deep}`, paintOrder: "stroke fill", textShadow: `0 ${size / 28}px 0 ${C.deep}, 0 0 ${size / 3}px rgba(91,143,243,.55)`,
+        <span key={i} style={{ display: "inline-block", color: C.blue3, letterSpacing: "-0.01em", textShadow: `0 ${size / 20}px ${size / 8}px rgba(63,111,216,.22)`,
           opacity: clamp(k * 1.4, 0, 1), transform: `translateY(${(1 - k) * size * 0.5}px) rotate(${(1 - k) * (i % 2 ? 9 : -9)}deg) scale(${0.5 + 0.5 * k})` }}>{ch}</span>
       );
     })}
@@ -46,19 +46,19 @@ const Logo: React.FC<{ size: number; frame: number; start: number }> = ({ size, 
 const Intro: React.FC<{ frame: number }> = ({ frame }) => {
   if (frame > 108) return null;
   const ex = interpolate(frame, [78, 104], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.in(Easing.cubic) });
-  const flash = frame >= 30 ? Math.exp(-(frame - 30) / 4) * 0.55 : 0;
+  const flash = frame >= 30 ? Math.exp(-(frame - 30) / 4) * 0.35 : 0;
   const lsp = interpolate(frame, [48, 80], [0.7, 0.32], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", transform: `scale(${1 + 1.5 * ex})`, opacity: 1 - ex, filter: `blur(${ex * 16}px)` }}>
       <div style={{ display: "flex", gap: 16, marginBottom: 60 }}>
         {PROG.map((c, i) => {
           const k = rise(frame, 4 + i * 5, 12);
-          return <div key={c.name} style={{ width: 270, height: 74, borderRadius: 12, background: i % 2 ? C.blue2 : C.blue3, color: "#fff", display: "grid", placeItems: "center", fontFamily: FONT, fontSize: 38, fontWeight: 900, opacity: k, transform: `translateY(${(1 - k) * 50}px) scaleX(${0.6 + 0.4 * k})`, boxShadow: "inset 0 -5px 0 rgba(0,0,0,.2)" }}>{c.name}</div>;
+          return <div key={c.name} style={{ width: 270, height: 74, borderRadius: 12, background: i % 2 ? C.blue2 : C.blue3, color: "#fff", display: "grid", placeItems: "center", fontFamily: FONT, fontSize: 38, fontWeight: 900, opacity: k, transform: `translateY(${(1 - k) * 50}px) scaleX(${0.6 + 0.4 * k})`, boxShadow: "0 14px 28px -10px rgba(63,111,216,.55)" }}>{c.name}</div>;
         })}
       </div>
       <Logo size={250} frame={frame} start={14} />
-      <div style={{ marginTop: 52, fontFamily: FONT, fontSize: 38, fontWeight: 800, color: "#b9c8ff", letterSpacing: `${lsp}em`, opacity: rise(frame, 48, 14) }}>CHORD PROGRESSION GENERATOR</div>
-      <AbsoluteFill style={{ background: "#fff", opacity: flash }} />
+      <div style={{ marginTop: 52, fontFamily: FONT, fontSize: 38, fontWeight: 800, color: C.muted, letterSpacing: `${lsp}em`, opacity: rise(frame, 48, 14) }}>CHORD PROGRESSION GENERATOR</div>
+      <AbsoluteFill style={{ background: "#cfdcff", opacity: flash }} />
     </AbsoluteFill>
   );
 };
@@ -71,7 +71,7 @@ const Wipe: React.FC<{ frame: number; at: number }> = ({ frame, at }) => {
   const x = interpolate(e, [0, 1], [-3100, 2300]);
   return (
     <AbsoluteFill style={{ overflow: "hidden", pointerEvents: "none" }}>
-      <div style={{ position: "absolute", top: -200, left: x, width: 2500, height: 1500, background: `linear-gradient(90deg, ${C.deep}, ${C.blue3} 45%, ${C.blue} 90%, #fff)`, transform: "skewX(-16deg)", boxShadow: "0 0 90px rgba(91,143,243,.8)" }} />
+      <div style={{ position: "absolute", top: -200, left: x, width: 2500, height: 1500, background: `linear-gradient(90deg, ${C.deep}, ${C.blue3} 45%, ${C.blue} 90%, #fff)`, transform: "skewX(-16deg)", boxShadow: "0 0 80px rgba(91,143,243,.35)" }} />
     </AbsoluteFill>
   );
 };
@@ -92,15 +92,15 @@ const Caption: React.FC<{ frame: number; c: Cap }> = ({ frame, c }) => {
   const words = c.title.split(" ");
   return (
     <AbsoluteFill style={{ justifyContent: c.top ? "flex-start" : "flex-end", alignItems: "center", paddingBottom: 56, paddingTop: c.top ? 36 : 0, opacity: out, transform: `translateY(${(1 - out) * (c.top ? -24 : 24)}px)` }}>
-      <div style={{ fontFamily: FONT, padding: "20px 52px 24px", background: C.glass, backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,.16)", borderRadius: 30, textAlign: "center", boxShadow: "0 30px 80px -20px rgba(0,0,0,.7)" }}>
-        <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: ".3em", color: "#8fb4ff", opacity: rise(frame, c.s, 10) }}>{c.kicker}</div>
-        <div style={{ fontSize: 76, fontWeight: 900, color: "#fff", lineHeight: 1.1, margin: "6px 0 4px", whiteSpace: "pre" }}>
+      <div style={{ fontFamily: FONT, padding: "20px 52px 24px", background: C.glass, backdropFilter: "blur(16px)", border: "1px solid rgba(63,111,216,.14)", borderRadius: 30, textAlign: "center", boxShadow: "0 28px 70px -28px rgba(44,85,180,.4)" }}>
+        <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: ".3em", color: C.blue3, opacity: rise(frame, c.s, 10) }}>{c.kicker}</div>
+        <div style={{ fontSize: 76, fontWeight: 900, color: C.text, lineHeight: 1.1, margin: "6px 0 4px", whiteSpace: "pre" }}>
           {words.map((w, i) => {
             const k = sp(frame, c.s + 4 + i * 3, 13, 170);
-            return <span key={i} style={{ display: "inline-block", marginRight: i < words.length - 1 ? 22 : 0, opacity: clamp(k * 1.3, 0, 1), transform: `translateY(${(1 - k) * 46}px)`, color: i === words.length - 1 ? "#9dc0ff" : "#fff" }}>{w}</span>;
+            return <span key={i} style={{ display: "inline-block", marginRight: i < words.length - 1 ? 22 : 0, opacity: clamp(k * 1.3, 0, 1), transform: `translateY(${(1 - k) * 46}px)`, color: i === words.length - 1 ? C.blue3 : C.text }}>{w}</span>;
           })}
         </div>
-        <div style={{ fontSize: 31, fontWeight: 700, color: "#c9d6f7", opacity: rise(frame, c.s + 14, 12) }}>{c.sub}</div>
+        <div style={{ fontSize: 31, fontWeight: 700, color: C.muted, opacity: rise(frame, c.s + 14, 12) }}>{c.sub}</div>
       </div>
     </AbsoluteFill>
   );
@@ -119,7 +119,7 @@ const Outro: React.FC<{ frame: number }> = ({ frame }) => {
         {CARDS.map((c, i) => {
           const k = sp(frame, 876 + i * 8, 12, 150);
           return (
-            <div key={c.big} style={{ width: 360, height: 250, borderRadius: 30, background: `linear-gradient(160deg, ${C.blue} 0%, ${C.blue3} 55%, ${C.deep} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: FONT, color: "#fff", opacity: clamp(k * 1.4, 0, 1), transform: `translateY(${(1 - k) * 80}px) scale(${0.6 + 0.4 * k})`, boxShadow: "0 30px 70px -20px rgba(0,0,0,.7), inset 0 -8px 0 rgba(0,0,0,.18), inset 0 0 0 2px rgba(255,255,255,.18)" }}>
+            <div key={c.big} style={{ width: 360, height: 250, borderRadius: 30, background: `linear-gradient(160deg, ${C.blue} 0%, ${C.blue3} 55%, ${C.deep} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: FONT, color: "#fff", opacity: clamp(k * 1.4, 0, 1), transform: `translateY(${(1 - k) * 80}px) scale(${0.6 + 0.4 * k})`, boxShadow: "0 30px 60px -24px rgba(44,85,180,.55)" }}>
               <div style={{ fontSize: c.big.length > 2 ? 92 : 112, fontWeight: 900, lineHeight: 1 }}>{c.big}</div>
               <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: ".22em", marginTop: 8, color: "#dbe6ff" }}>{c.small}</div>
             </div>
@@ -128,10 +128,10 @@ const Outro: React.FC<{ frame: number }> = ({ frame }) => {
       </div>
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: fin, transform: `scale(${0.85 + 0.15 * fin})` }}>
         <Logo size={210} frame={frame} start={962} />
-        <div style={{ marginTop: 36, fontFamily: FONT, fontSize: 38, fontWeight: 800, color: "#b9c8ff", letterSpacing: ".28em" }}>CHORD PROGRESSION GENERATOR</div>
-        <div style={{ marginTop: 56, fontFamily: FONT, fontSize: 52, fontWeight: 900, color: "#fff", padding: "20px 56px", borderRadius: 999, background: `linear-gradient(90deg, ${C.blue3}, ${C.blue})`, transform: `scale(${pulse})`, boxShadow: "0 0 60px rgba(91,143,243,.65), inset 0 -6px 0 rgba(0,0,0,.2)" }}>derizmp3.vercel.app</div>
+        <div style={{ marginTop: 36, fontFamily: FONT, fontSize: 38, fontWeight: 800, color: C.muted, letterSpacing: ".28em" }}>CHORD PROGRESSION GENERATOR</div>
+        <div style={{ marginTop: 56, fontFamily: FONT, fontSize: 52, fontWeight: 900, color: "#fff", padding: "20px 56px", borderRadius: 999, background: `linear-gradient(90deg, ${C.blue3}, ${C.blue})`, transform: `scale(${pulse})`, boxShadow: "0 18px 44px -12px rgba(63,111,216,.6)" }}>derizmp3.vercel.app</div>
       </AbsoluteFill>
-      <AbsoluteFill style={{ background: "#000", opacity: rise(frame, 1052, 26) }} />
+      <AbsoluteFill style={{ background: "#fff", opacity: rise(frame, 1052, 26) }} />
     </AbsoluteFill>
   );
 };
@@ -191,7 +191,7 @@ export const MgchordPromo: React.FC = () => {
     const [x0, y0] = keyCenter(k.name);
     const x1 = G.rollX + i * 4 * ROLL.PX_BEAT + 2 * ROLL.PX_BEAT, y1 = G.blockY + G.blockH / 2;
     return (
-      <div key={k.name} style={{ position: "absolute", left: x0 + (x1 - x0) * e - 40, top: y0 + (y1 - y0) * e - 26 - Math.sin(Math.PI * e) * 90, width: 80, height: 52, borderRadius: 10, background: "#fff", color: C.blue3, display: "grid", placeItems: "center", fontFamily: FONT, fontSize: 28, fontWeight: 900, boxShadow: "0 0 30px rgba(255,255,255,.8)", opacity: 1 - 0.4 * e, zIndex: 20 }}>{PROG[i].name}</div>
+      <div key={k.name} style={{ position: "absolute", left: x0 + (x1 - x0) * e - 40, top: y0 + (y1 - y0) * e - 26 - Math.sin(Math.PI * e) * 90, width: 80, height: 52, borderRadius: 10, background: "#fff", color: C.blue3, display: "grid", placeItems: "center", fontFamily: FONT, fontSize: 28, fontWeight: 900, boxShadow: "0 10px 28px rgba(20,40,110,.35)", opacity: 1 - 0.4 * e, zIndex: 20 }}>{PROG[i].name}</div>
     );
   });
 
@@ -208,7 +208,7 @@ export const MgchordPromo: React.FC = () => {
   const ghost = ghostOn ? [0, 1, 2, 3, 4, 5, 6].map((k) => {
     const [gx, gy] = ghostPos(frame - k * 1.6);
     const a = k === 0 ? 1 : 0.4 / k;
-    return <div key={k} style={{ position: "absolute", left: gx - 36, top: gy - 36, width: 72, height: 72, borderRadius: "50%", background: C.blue3, border: "3px solid #fff", opacity: a, transform: `scale(${ghostScale * (1 - k * 0.08)})`, zIndex: 30, boxShadow: k === 0 ? "0 18px 40px rgba(0,0,0,.6), 0 0 40px rgba(130,170,255,.9)" : "none", display: "grid", placeItems: "center" }}>
+    return <div key={k} style={{ position: "absolute", left: gx - 36, top: gy - 36, width: 72, height: 72, borderRadius: "50%", background: C.blue3, border: "3px solid #fff", opacity: a, transform: `scale(${ghostScale * (1 - k * 0.08)})`, zIndex: 30, boxShadow: k === 0 ? "0 18px 36px rgba(44,85,180,.45)" : "none", display: "grid", placeItems: "center" }}>
       {k === 0 && <svg viewBox="0 0 24 24" width={34} height={34} fill="#fff">{[[9, 6], [15, 6], [9, 12], [15, 12], [9, 18], [15, 18]].map(([a2, b2], i) => <circle key={i} cx={a2} cy={b2} r={1.8} />)}</svg>}
     </div>;
   }) : null;

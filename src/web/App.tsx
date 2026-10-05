@@ -4,10 +4,10 @@ import { MotionIntro } from "../MotionIntro";
 import { MgchordPromo, MGCHORD_DURATION } from "../mgchord/Promo";
 
 const box: React.CSSProperties = {
-  background: "#14142a",
-  border: "1px solid #2a2a4a",
+  background: "#ffffff",
+  border: "1px solid #dbe3f5",
   borderRadius: 10,
-  color: "#fff",
+  color: "#16213e",
   padding: "10px 14px",
   fontSize: 16,
   width: "100%",
@@ -17,9 +17,9 @@ const box: React.CSSProperties = {
 const tab = (on: boolean): React.CSSProperties => ({
   padding: "10px 18px",
   borderRadius: 999,
-  border: "1px solid #2a2a4a",
-  background: on ? "#3f6fd8" : "#14142a",
-  color: "#fff",
+  border: "1px solid #dbe3f5",
+  background: on ? "#3f6fd8" : "#ffffff",
+  color: on ? "#fff" : "#3f6fd8",
   fontWeight: 700,
   cursor: "pointer",
 });
@@ -30,7 +30,7 @@ export const App: React.FC = () => {
   const [subtitle, setSubtitle] = useState("Motion Graphics • Remotion");
 
   return (
-    <div style={{ minHeight: "100vh", background: "#07070f", color: "#fff", fontFamily: "Helvetica, Arial, sans-serif", padding: 24, boxSizing: "border-box" }}>
+    <div style={{ minHeight: "100vh", background: "#ffffff", color: "#16213e", fontFamily: "Helvetica, Arial, sans-serif", padding: 24, boxSizing: "border-box" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <h2 style={{ margin: "0 0 14px" }}>Remotion Motion Preview</h2>
         <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
@@ -49,7 +49,7 @@ export const App: React.FC = () => {
             controls
             loop
             numberOfSharedAudioTags={16}
-            style={{ width: "100%", aspectRatio: "16/9", borderRadius: 12, overflow: "hidden" }}
+            style={{ width: "100%", aspectRatio: "16/9", borderRadius: 12, overflow: "hidden", boxShadow: "0 24px 60px -30px rgba(44,85,180,.45)", border: "1px solid #e6ecfa" }}
           />
         ) : (
           <>
@@ -72,7 +72,7 @@ export const App: React.FC = () => {
             </div>
           </>
         )}
-        {which === "mgchord" && <p style={{ color: "#9aa7d6", marginTop: 12 }}>Tekan play untuk dengar suaranya (browser butuh klik dulu buat nyalain audio).</p>}
+        {which === "mgchord" && <p style={{ color: "#6b7a9c", marginTop: 12 }}>Tekan play untuk dengar suaranya (browser butuh klik dulu buat nyalain audio).</p>}
       </div>
     </div>
   );

@@ -12,10 +12,12 @@ export const C = {
   blue3: "#3f6fd8",
   deep: "#2c55b4",
   orange: "#f2b632",
-  bg: "#070a18",
-  bg2: "#0e1530",
+  bg: "#ffffff",
+  bg2: "#f3f6ff",
   ink: "#14151c",
-  glass: "rgba(10,13,28,0.74)",
+  text: "#16213e",
+  muted: "#6b7a9c",
+  glass: "rgba(255,255,255,0.88)",
 };
 
 export const FPS = 30;

@@ -33,15 +33,15 @@ export interface WinProps {
 
 /* ---------- Header ---------- */
 const Header: React.FC = () => (
-  <div style={abs(0, 0, G.winW, G.headH, { background: "#e6e6e6", display: "flex", alignItems: "center", padding: "0 16px", boxSizing: "border-box", gap: 14 })}>
-    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 32, fontWeight: 900, color: C.blue3, WebkitTextStroke: "1.5px #2c55b4", paintOrder: "stroke fill", textShadow: "0 2px 0 #2c55b4", letterSpacing: ".01em" }}>
+  <div style={abs(0, 0, G.winW, G.headH, { background: "#f4f6fb", display: "flex", alignItems: "center", padding: "0 16px", boxSizing: "border-box", gap: 14 })}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 32, fontWeight: 900, color: C.blue3, letterSpacing: ".01em" }}>
       <Lamp />MGCHORD
     </div>
     <div style={{ margin: "0 auto", display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
-      <div style={{ width: 230, height: 30, background: "#d4d4d4", color: "#7b7b7b", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 3, fontWeight: 700 }}>My Progression</div>
-      <div style={{ height: 30, padding: "0 14px", background: "#2b2b2b", color: "#fff", display: "flex", alignItems: "center", borderRadius: 4, fontWeight: 800 }}>SAVE</div>
+      <div style={{ width: 230, height: 30, background: "#e6eaf4", color: "#8090b0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 3, fontWeight: 700 }}>My Progression</div>
+      <div style={{ height: 30, padding: "0 14px", background: C.blue3, color: "#fff", display: "flex", alignItems: "center", borderRadius: 4, fontWeight: 800 }}>SAVE</div>
     </div>
-    <div style={{ fontSize: 17, fontWeight: 900, color: "#8c8c8c", letterSpacing: ".03em" }}>WEB DAW</div>
+    <div style={{ fontSize: 17, fontWeight: 900, color: "#a3aec8", letterSpacing: ".03em" }}>WEB DAW</div>
   </div>
 );
 
@@ -69,7 +69,7 @@ const Controls: React.FC<WinProps> = (p) => {
       </div>
       <Dropdown x={492} w={262} label={`Sound: ${SOUNDS[p.soundIdx]}`} flash={oFlash} />
       <div style={abs(768, G.ctrlY, 150, 52, { background: C.blue2, color: "#fff", borderRadius: 5, display: "grid", placeItems: "center", fontSize: 22, fontWeight: 800 })}>4 Bars</div>
-      <div style={abs(G.winW - 100, G.ctrlY - 6, 76, 64, { background: "#fff", borderRadius: 14, display: "grid", placeItems: "center", boxShadow: "0 6px 0 #c9d6f7" })}>
+      <div style={abs(G.winW - 100, G.ctrlY - 6, 76, 64, { background: "#fff", borderRadius: 14, display: "grid", placeItems: "center", boxShadow: "0 8px 18px -6px rgba(20,40,110,.35)" })}>
         <svg viewBox="0 0 24 24" width={42} height={42} fill="none" stroke={C.blue3} strokeWidth={2} strokeLinecap="round">
           <rect x="4" y="4" width="16" height="16" rx="3.5" />
           {[[9, 9], [15, 15], [15, 9], [9, 15]].map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r={1.5} fill={C.blue3} stroke="none" />)}
@@ -79,7 +79,7 @@ const Controls: React.FC<WinProps> = (p) => {
       {p.soundMenu > 0.01 && (
         <div style={abs(492, G.ctrlY + 58, 262, 150, {
           background: C.blue3, borderRadius: 6, padding: 6, boxSizing: "border-box", opacity: p.soundMenu, transform: `translateY(${(1 - p.soundMenu) * -10}px)`,
-          boxShadow: "0 18px 40px -6px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.14)", zIndex: 5,
+          boxShadow: "0 18px 40px -8px rgba(20,40,110,.45)", zIndex: 5,
         })}>
           {SOUNDS.map((s, i) => (
             <div key={s} style={{ height: 42, display: "grid", placeItems: "center", borderRadius: 4, fontSize: 20, fontWeight: 800, textTransform: "uppercase", letterSpacing: ".02em",
@@ -128,7 +128,7 @@ const ChordRow: React.FC<WinProps> = ({ frame }) => (
       return (
         <div key={c.name} style={abs(G.rollX + i * 4 * ROLL.PX_BEAT + 2, G.blockY, w, G.blockH, {
           background: glow > 0.05 ? "#fff" : C.blue3, color: glow > 0.05 ? C.blue3 : "#fff", borderRadius: 6, display: "grid", placeItems: "center",
-          fontSize: 28, fontWeight: 900, transform: `scaleY(${k}) scaleX(${0.7 + 0.3 * k})`, transformOrigin: "50% 100%", boxShadow: `0 0 ${24 * glow}px rgba(255,255,255,.9), inset 0 -4px 0 rgba(0,0,0,.18)`,
+          fontSize: 28, fontWeight: 900, transform: `scaleY(${k}) scaleX(${0.7 + 0.3 * k})`, transformOrigin: "50% 100%", boxShadow: `0 0 ${24 * glow}px rgba(255,255,255,.9), inset 0 -2px 0 rgba(0,0,0,.12)`,
         })}>{c.name}</div>
       );
     })}
@@ -152,25 +152,25 @@ const Roll: React.FC<WinProps> = (p) => {
       const y = (ROLL.MAX - n.m) * ROLL.ROW_H;
       notes.push(
         <div key={`${ci}-${ni}`} style={{ position: "absolute", left: x + 2, top: y + 1, width: Math.max(5, n.l * ROLL.PX_BEAT - 4), height: ROLL.ROW_H - 2.5, borderRadius: 3,
-          background: "linear-gradient(180deg,#a9c6ff,#6f9cf5)", opacity: 0.55 + 0.45 * k, transform: `scaleX(${k})`, transformOrigin: "0 50%", boxShadow: "0 0 10px rgba(120,165,255,.55)" }} />
+          background: "linear-gradient(180deg,#6f9cf5,#3f6fd8)", opacity: 0.55 + 0.45 * k, transform: `scaleX(${k})`, transformOrigin: "0 50%", boxShadow: "0 2px 6px rgba(63,111,216,.3)" }} />
       );
     });
   });
   const head = p.playhead >= 0 ? p.playhead * ROLL.PX_BEAT : -1;
   return (
-    <div style={abs(G.rollX, G.rollY, G.rollW, G.rollH, { background: C.ink, borderRadius: 6, overflow: "hidden" })}>
+    <div style={abs(G.rollX, G.rollY, G.rollW, G.rollH, { background: "#f6f9ff", borderRadius: 8, overflow: "hidden" })}>
       {Array.from({ length: rows }, (_, i) => {
         const m = ROLL.MAX - i;
-        return <div key={i} style={{ position: "absolute", left: 0, top: i * ROLL.ROW_H, width: "100%", height: ROLL.ROW_H, background: BLACK.has(m % 12) ? "rgba(255,255,255,.035)" : "transparent", borderBottom: m % 12 === 0 ? "1px solid rgba(255,255,255,.12)" : "none" }} />;
+        return <div key={i} style={{ position: "absolute", left: 0, top: i * ROLL.ROW_H, width: "100%", height: ROLL.ROW_H, background: BLACK.has(m % 12) ? "rgba(63,111,216,.06)" : "transparent", borderBottom: m % 12 === 0 ? "1px solid rgba(63,111,216,.2)" : "none" }} />;
       })}
       {Array.from({ length: 17 }, (_, i) => (
-        <div key={i} style={{ position: "absolute", left: i * ROLL.PX_BEAT, top: 0, width: i % 4 === 0 ? 2 : 1, height: "100%", background: i % 4 === 0 ? "rgba(255,255,255,.2)" : "rgba(255,255,255,.07)" }} />
+        <div key={i} style={{ position: "absolute", left: i * ROLL.PX_BEAT, top: 0, width: i % 4 === 0 ? 2 : 1, height: "100%", background: i % 4 === 0 ? "rgba(63,111,216,.22)" : "rgba(63,111,216,.08)" }} />
       ))}
       {notes}
       {[1, 2, 3].map((b) => (
         <div key={b} style={{ position: "absolute", left: b * 4 * ROLL.PX_BEAT - 6, top: 0, width: 12, height: 26, background: C.orange, borderRadius: "0 0 6px 6px", opacity: rise(frame, CLICKS[b] ?? 0, 8) }} />
       ))}
-      {head >= 0 && <div style={{ position: "absolute", left: head, top: 0, width: 3, height: "100%", background: "#fff", boxShadow: "0 0 14px rgba(255,255,255,.9)" }} />}
+      {head >= 0 && <div style={{ position: "absolute", left: head, top: 0, width: 3, height: "100%", background: C.blue3, boxShadow: "0 0 12px rgba(63,111,216,.6)" }} />}
     </div>
   );
 };
@@ -181,10 +181,10 @@ const Bar: React.FC<WinProps> = (p) => {
   const pl = 1 + 0.06 * beatPulse(p.frame) * (p.playhead >= 0 ? 1 : 0);
   return (
     <>
-      <div style={abs(24, G.barY + 14, 76, 76, { background: "#fff", borderRadius: "50%", display: "grid", placeItems: "center", transform: `scale(${pl})`, boxShadow: "0 6px 0 #c9d6f7" })}>
+      <div style={abs(24, G.barY + 14, 76, 76, { background: "#fff", borderRadius: "50%", display: "grid", placeItems: "center", transform: `scale(${pl})`, boxShadow: "0 8px 18px -6px rgba(20,40,110,.35)" })}>
         <svg viewBox="0 0 24 24" width={38} height={38}><path d="M7 4l13 8-13 8z" fill={C.blue3} /></svg>
       </div>
-      <div style={abs(HANDLE.x - 36, HANDLE.y - 36, 72, 72, { background: C.blue3, borderRadius: "50%", display: "grid", placeItems: "center", boxShadow: `0 0 ${34 * p.handleGlow}px ${6 * p.handleGlow}px rgba(255,255,255,.85), inset 0 -5px 0 rgba(0,0,0,.2)`, transform: `scale(${1 + 0.18 * p.handleGlow})`, border: p.handleGlow > 0.1 ? "3px solid #fff" : "3px solid transparent" })}>
+      <div style={abs(HANDLE.x - 36, HANDLE.y - 36, 72, 72, { background: C.blue3, borderRadius: "50%", display: "grid", placeItems: "center", boxShadow: `0 0 ${34 * p.handleGlow}px ${6 * p.handleGlow}px rgba(255,255,255,.85), inset 0 -2px 0 rgba(0,0,0,.12)`, transform: `scale(${1 + 0.18 * p.handleGlow})`, border: p.handleGlow > 0.1 ? "3px solid #fff" : "3px solid transparent" })}>
         <svg viewBox="0 0 24 24" width={34} height={34} fill="#fff">{[[9, 6], [15, 6], [9, 12], [15, 12], [9, 18], [15, 18]].map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r={1.8} />)}</svg>
       </div>
       <div style={abs(204, G.barY + 16, 72, 72, { background: "rgba(255,255,255,.18)", borderRadius: "50%", display: "grid", placeItems: "center" })}>
@@ -197,7 +197,7 @@ const Bar: React.FC<WinProps> = (p) => {
 };
 
 export const Window: React.FC<WinProps> = (p) => (
-  <div style={abs(0, 0, G.winW, G.uiH, { background: C.blue, borderRadius: 14, overflow: "hidden", fontFamily: FONT, boxShadow: "0 50px 120px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.1)" })}>
+  <div style={abs(0, 0, G.winW, G.uiH, { background: C.blue, borderRadius: 14, overflow: "hidden", fontFamily: FONT, boxShadow: "0 40px 90px -28px rgba(44,85,180,.5), 0 0 0 1px rgba(63,111,216,.1)" })}>
     <Header />
     <Wave {...p} />
     <ChordRow {...p} />
@@ -227,7 +227,7 @@ export const Keyboard: React.FC<{ frame: number }> = ({ frame }) => {
     return Math.exp(-(frame - p.at) / 10);
   };
   return (
-    <div style={abs(G.kbX, 0, G.kbW, G.uiH, { background: C.blue, borderRadius: 14, overflow: "hidden", fontFamily: FONT, boxShadow: "0 50px 120px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.1)" })}>
+    <div style={abs(G.kbX, 0, G.kbW, G.uiH, { background: C.blue, borderRadius: 14, overflow: "hidden", fontFamily: FONT, boxShadow: "0 40px 90px -28px rgba(44,85,180,.5), 0 0 0 1px rgba(63,111,216,.1)" })}>
       <div style={abs(14, 14, G.kbW - 28, 50, { background: C.blue2, borderRadius: 5, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 800, letterSpacing: ".03em" })}>KEYS C5 – C6</div>
       {WHITES.map((n, i) => {
         const pr = n === "C" && i === 0 ? press("C") : 0;
@@ -258,20 +258,20 @@ export const Timeline: React.FC<{ frame: number; dropAt: number; opacity: number
   const flash = Math.exp(-(frame - dropAt) / 10) * (frame >= dropAt ? 1 : 0);
   const tracks = [{ n: "PIANO", c: "#7aa0ff" }, { n: "BASS", c: "#b58cff" }, { n: "DRUMS", c: "#ffb36b" }];
   return (
-    <div style={abs(0, G.tlY, G.uiW, 230, { opacity, background: "#13141d", borderRadius: 14, fontFamily: FONT, overflow: "hidden", boxShadow: "0 40px 90px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.08)" })}>
-      <div style={abs(0, 0, G.uiW, 30, { background: "#1c1d29" })}>
-        {Array.from({ length: 8 }, (_, i) => <div key={i} style={{ position: "absolute", left: G.tlLaneX + i * G.tlBarW + 8, top: 5, color: "rgba(255,255,255,.5)", fontSize: 16, fontWeight: 800 }}>{i + 1}</div>)}
+    <div style={abs(0, G.tlY, G.uiW, 230, { opacity, background: "#ffffff", borderRadius: 14, fontFamily: FONT, overflow: "hidden", boxShadow: "0 30px 70px -24px rgba(44,85,180,.45), 0 0 0 1px rgba(63,111,216,.12)" })}>
+      <div style={abs(0, 0, G.uiW, 30, { background: "#eef2fb" })}>
+        {Array.from({ length: 8 }, (_, i) => <div key={i} style={{ position: "absolute", left: G.tlLaneX + i * G.tlBarW + 8, top: 5, color: "#8b97b5", fontSize: 16, fontWeight: 800 }}>{i + 1}</div>)}
       </div>
       {tracks.map((t, i) => (
-        <div key={t.n} style={abs(0, 30 + i * 66, G.uiW, 62, { borderBottom: "1px solid rgba(255,255,255,.06)" })}>
-          <div style={abs(0, 0, G.tlLaneX - 10, 62, { color: "rgba(255,255,255,.7)", fontSize: 20, fontWeight: 800, display: "flex", alignItems: "center", paddingLeft: 24 })}>{t.n}</div>
-          {i === 0 && <div style={abs(G.tlLaneX, 6, 4 * G.tlBarW, 50, { border: `2px dashed rgba(255,255,255,${0.18 + 0.2 * (1 - k)})`, borderRadius: 8 })} />}
+        <div key={t.n} style={abs(0, 30 + i * 66, G.uiW, 62, { borderBottom: "1px solid rgba(63,111,216,.08)" })}>
+          <div style={abs(0, 0, G.tlLaneX - 10, 62, { color: "#5b6b90", fontSize: 20, fontWeight: 800, display: "flex", alignItems: "center", paddingLeft: 24 })}>{t.n}</div>
+          {i === 0 && <div style={abs(G.tlLaneX, 6, 4 * G.tlBarW, 50, { border: `2px dashed rgba(63,111,216,${0.2 + 0.25 * (1 - k)})`, borderRadius: 8 })} />}
           {i === 0 && k > 0.01 && (
-            <div style={abs(G.tlLaneX, 6, 4 * G.tlBarW, 50, { background: t.c, borderRadius: 8, transform: `scaleX(${k})`, transformOrigin: "0 50%", boxShadow: `0 0 ${50 * flash}px rgba(160,190,255,${0.9 * flash})`, overflow: "hidden" })}>
+            <div style={abs(G.tlLaneX, 6, 4 * G.tlBarW, 50, { background: t.c, borderRadius: 8, transform: `scaleX(${k})`, transformOrigin: "0 50%", boxShadow: `0 0 ${40 * flash}px rgba(63,111,216,${0.55 * flash})`, overflow: "hidden" })}>
               {PROG.flatMap((c, ci) => c.notes.map((m, ni) => (
                 <div key={`${ci}-${ni}`} style={{ position: "absolute", left: ci * G.tlBarW + 8, top: 8 + (ni * 11), width: G.tlBarW - 16, height: 7, borderRadius: 3, background: "rgba(255,255,255,.75)" }} />
               )))}
-              <div style={{ position: "absolute", left: 10, top: 2, fontSize: 14, fontWeight: 900, color: "rgba(20,30,60,.85)" }}>MGCHORD</div>
+              <div style={{ position: "absolute", left: 10, top: 2, fontSize: 14, fontWeight: 900, color: "rgba(255,255,255,.95)" }}>MGCHORD</div>
             </div>
           )}
           {i === 1 && <div style={abs(G.tlLaneX + 2 * G.tlBarW, 6, 4 * G.tlBarW, 50, { background: t.c, opacity: 0.55, borderRadius: 8 })} />}

@@ -11,7 +11,7 @@ import {
 
 type Props = { title: string; subtitle: string };
 
-const COLORS = ["#7c5cff", "#00d4ff", "#ff4d8d", "#ffc857"];
+const COLORS = ["#5b8ff3", "#a9c4ff", "#3f6fd8", "#f2b632"];
 
 /** Background: gradient yang pelan-pelan muter + grid garis */
 const Background: React.FC = () => {
@@ -20,7 +20,7 @@ const Background: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `linear-gradient(${angle}deg, #0b0b1a 0%, #1a1038 50%, #07121f 100%)`,
+        background: `linear-gradient(${angle}deg, #ffffff 0%, #f3f6ff 50%, #ffffff 100%)`,
       }}
     >
       <svg width="100%" height="100%" style={{ opacity: 0.12 }}>
@@ -31,7 +31,7 @@ const Background: React.FC = () => {
             y1={0}
             x2={i * 100}
             y2={1080}
-            stroke="#fff"
+            stroke="#9db6ee"
             strokeWidth={1}
           />
         ))}
@@ -42,7 +42,7 @@ const Background: React.FC = () => {
             y1={i * 100}
             x2={1920}
             y2={i * 100}
-            stroke="#fff"
+            stroke="#9db6ee"
             strokeWidth={1}
           />
         ))}
@@ -75,7 +75,7 @@ const FloatingOrbs: React.FC = () => {
               height: size,
               borderRadius: "50%",
               background: COLORS[i % COLORS.length],
-              opacity: 0.35,
+              opacity: 0.22,
               filter: "blur(2px)",
               transform: `scale(${pop})`,
             }}
@@ -102,8 +102,8 @@ const Ring: React.FC = () => {
       <svg width={700} height={700} style={{ transform: `rotate(${rotate}deg)` }}>
         <defs>
           <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#7c5cff" />
-            <stop offset="100%" stopColor="#00d4ff" />
+            <stop offset="0%" stopColor="#3f6fd8" />
+            <stop offset="100%" stopColor="#8fb4ff" />
           </linearGradient>
         </defs>
         <circle
@@ -160,7 +160,7 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
                 display: "inline-block",
                 fontSize: 150,
                 fontWeight: 800,
-                color: "#fff",
+                color: "#16213e",
                 letterSpacing: 6,
                 whiteSpace: "pre",
                 opacity: s,
@@ -176,7 +176,7 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
         style={{
           height: 4,
           width: lineWidth,
-          background: "linear-gradient(90deg,#7c5cff,#00d4ff)",
+          background: "linear-gradient(90deg,#3f6fd8,#8fb4ff)",
           borderRadius: 2,
           margin: "18px 0",
         }}
@@ -184,7 +184,7 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
       <div
         style={{
           fontSize: 38,
-          color: "#b9c2ff",
+          color: "#6b7a9c",
           letterSpacing: 8,
           textTransform: "uppercase",
           opacity: subOpacity,
@@ -201,7 +201,7 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
 const FadeOut: React.FC = () => {
   const frame = useCurrentFrame();
   const o = interpolate(frame, [0, 25], [0, 1], { extrapolateRight: "clamp" });
-  return <AbsoluteFill style={{ background: "#000", opacity: o }} />;
+  return <AbsoluteFill style={{ background: "#fff", opacity: o }} />;
 };
 
 export const MotionIntro: React.FC<Props> = (props) => {
