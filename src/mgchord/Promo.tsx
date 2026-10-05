@@ -4,6 +4,9 @@ import { C, FONT, beatPulse, clamp, fall, kf, rise, shake, sp, type KF } from ".
 import { CLICKS, DRAG, DURATION, G, KEY_PRESSES, PROG, ROLL, STYLE_START, SOUND_START, WIPES, soundAt, styleAt } from "./data";
 import { DROP, HANDLE, Keyboard, Timeline, Window, keyCenter } from "./ui";
 
+/* Timing ditulis dalam frame 30fps (lihat data.ts); SCALE mengubahnya ke frame komposisi */
+const SCALE = 60 / 30;
+
 /* ================= Background ================= */
 const GLYPHS = ["Cm", "Ab", "Eb", "Bb", "9", "maj7", "Fm", "Gm7", "sus4", "Dm"];
 const Background: React.FC<{ frame: number }> = ({ frame }) => {
@@ -138,13 +141,13 @@ const Outro: React.FC<{ frame: number }> = ({ frame }) => {
 
 /* ================= Audio cues ================= */
 const Sfx: React.FC<{ file: string; at: number; dur: number; vol?: number }> = ({ file, at, dur, vol = 1 }) => (
-  <Sequence from={Math.max(0, at)} durationInFrames={dur} layout="none">
+  <Sequence from={Math.round(Math.max(0, at) * SCALE)} durationInFrames={Math.round(dur * SCALE)} layout="none">
     <Audio src={staticFile(`sfx/${file}.mp3`)} volume={vol} />
   </Sequence>
 );
 const Cues: React.FC = () => (
   <>
-    <Audio src={staticFile("sfx/bed.mp3")} volume={(f) => interpolate(f, [0, 15, 1050, 1079], [0, 0.55, 0.55, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+    <Audio src={staticFile("sfx/bed.mp3")} volume={(f) => interpolate(f / SCALE, [0, 15, 1050, 1079], [0, 0.55, 0.55, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
     <Sfx file="riser" at={0} dur={30} vol={0.6} />
     <Sfx file="impact" at={30} dur={48} vol={0.9} />
     {WIPES.map((w) => <Sfx key={`w${w}`} file="whoosh" at={w - 10} dur={24} vol={0.7} />)}
@@ -164,7 +167,8 @@ const CARD_AT = [876, 884, 892, 900];
 
 /* ================= Komposisi utama ================= */
 export const MgchordPromo: React.FC = () => {
-  const frame = useCurrentFrame();
+  // Semua timing di file ini ditulis dalam "frame 30fps"; dibagi SCALE supaya jalan mulus di 60fps
+  const frame = useCurrentFrame() / SCALE;
 
   // kamera (koordinat UI -> layar 1920x1080)
   const cxK: KF[] = [[100, 750], [190, 750], [205, 760], [290, 760], [305, 640], [540, 640], [560, 520], [640, 520], [660, 610], [740, 610], [760, 750], [860, 750], [900, 750]];
@@ -236,4 +240,5 @@ export const MgchordPromo: React.FC = () => {
   );
 };
 
-export const MGCHORD_DURATION = DURATION;
+export const MGCHORD_FPS = 60;
+export const MGCHORD_DURATION = DURATION * SCALE;   // 36 detik @ 60fps = 2160 frame

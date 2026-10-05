@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Player } from "@remotion/player";
 import { MotionIntro } from "../MotionIntro";
-import { MgchordPromo, MGCHORD_DURATION } from "../mgchord/Promo";
+import { MgchordPromo, MGCHORD_DURATION, MGCHORD_FPS } from "../mgchord/Promo";
 
 const box: React.CSSProperties = {
   background: "#ffffff",
@@ -43,7 +43,7 @@ export const App: React.FC = () => {
             key="mgchord"
             component={MgchordPromo}
             durationInFrames={MGCHORD_DURATION}
-            fps={30}
+            fps={MGCHORD_FPS}
             compositionWidth={1920}
             compositionHeight={1080}
             controls
@@ -57,8 +57,8 @@ export const App: React.FC = () => {
               key="intro"
               component={MotionIntro}
               inputProps={{ title, subtitle }}
-              durationInFrames={180}
-              fps={30}
+              durationInFrames={360}
+              fps={60}
               compositionWidth={1920}
               compositionHeight={1080}
               controls

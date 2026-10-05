@@ -11,11 +11,17 @@ import {
 
 type Props = { title: string; subtitle: string };
 
+/** Frame dalam satuan 30fps, apa pun fps komposisinya (60fps -> frame dibagi 2). */
+const useT = (): number => {
+  const { fps } = useVideoConfig();
+  return useCurrentFrame() * (30 / fps);
+};
+
 const COLORS = ["#5b8ff3", "#a9c4ff", "#3f6fd8", "#f2b632"];
 
 /** Background: gradient yang pelan-pelan muter + grid garis */
 const Background: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const angle = interpolate(frame, [0, 180], [120, 240]);
   return (
     <AbsoluteFill
@@ -53,8 +59,8 @@ const Background: React.FC = () => {
 
 /** Bola-bola yang melayang, cukup satu .map() */
 const FloatingOrbs: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const frame = useT();
+  const fps = 30;   // timing ditulis dalam frame 30fps
   return (
     <AbsoluteFill>
       {Array.from({ length: 24 }).map((_, i) => {
@@ -88,7 +94,7 @@ const FloatingOrbs: React.FC = () => {
 
 /** Cincin yang menggambar dirinya sendiri (stroke-dashoffset) */
 const Ring: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const r = 300;
   const circ = 2 * Math.PI * r;
   const progress = interpolate(frame, [10, 70], [0, 1], {
@@ -124,8 +130,8 @@ const Ring: React.FC = () => {
 
 /** Judul: tiap huruf muncul satu-satu dengan spring */
 const Title: React.FC<Props> = ({ title, subtitle }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const frame = useT();
+  const fps = 30;   // timing ditulis dalam frame 30fps
 
   const subOpacity = interpolate(frame, [50, 75], [0, 1], {
     extrapolateLeft: "clamp",
@@ -199,19 +205,20 @@ const Title: React.FC<Props> = ({ title, subtitle }) => {
 
 /** Fade out di akhir */
 const FadeOut: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const o = interpolate(frame, [0, 25], [0, 1], { extrapolateRight: "clamp" });
   return <AbsoluteFill style={{ background: "#fff", opacity: o }} />;
 };
 
 export const MotionIntro: React.FC<Props> = (props) => {
+  const { fps } = useVideoConfig();
   return (
     <AbsoluteFill>
       <Background />
       <FloatingOrbs />
       <Ring />
       <Title {...props} />
-      <Sequence from={155}>
+      <Sequence from={Math.round(155 * (fps / 30))}>
         <FadeOut />
       </Sequence>
     </AbsoluteFill>
